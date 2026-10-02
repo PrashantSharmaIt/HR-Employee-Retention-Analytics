@@ -1,0 +1,58 @@
+-- Create Database and Table (Schema based on HR_Analytics.csv)
+CREATE DATABASE HR_Analytics;
+USE HR_Analytics;
+
+-- 1. Total Employees
+SELECT COUNT(DISTINCT EmpID) AS Total_Employees 
+FROM hr_data;
+
+-- 2. Total Attrition (Matches the '237' KPI)
+SELECT COUNT(EmpID) AS Total_Attrition 
+FROM hr_data 
+WHERE Attrition = 'Yes';
+
+-- 3. Attrition Rate (Matches the '16.1%' KPI)
+SELECT 
+    ROUND((SUM(CASE WHEN Attrition = 'Yes' THEN 1 ELSE 0 END) / COUNT(EmpID)) * 100, 1) AS Attrition_Rate
+FROM hr_data;
+
+-- 4. Average Age, Salary, and Years at Company KPIs
+SELECT 
+    ROUND(AVG(Age), 2) AS Avg_Age,
+    ROUND(AVG(MonthlyIncome), 2) AS Avg_Salary,
+    ROUND(AVG(YearsAtCompany), 2) AS Avg_Years_At_Company
+FROM hr_data;
+
+-- 5. Attrition by Gender (Matches the top-right visual)
+SELECT Gender, COUNT(EmpID) AS Attrition_Count 
+FROM hr_data 
+WHERE Attrition = 'Yes' 
+GROUP BY Gender;
+
+-- 6. Attrition by Education Field (Matches the Donut Chart)
+SELECT EducationField, COUNT(EmpID) AS Attrition_Count 
+FROM hr_data 
+WHERE Attrition = 'Yes' 
+GROUP BY EducationField 
+ORDER BY Attrition_Count DESC;
+
+-- 7. Attrition by Age Group (Matches the Bar Chart)
+SELECT AgeGroup, COUNT(EmpID) AS Attrition_Count 
+FROM hr_data 
+WHERE Attrition = 'Yes' 
+GROUP BY AgeGroup 
+ORDER BY AgeGroup;
+
+-- 8. Job Role vs Job Satisfaction Matrix (Matches the Matrix Table)
+SELECT JobRole, JobSatisfaction, COUNT(EmpID) AS Attrition_Count 
+FROM hr_data 
+WHERE Attrition = 'Yes' 
+GROUP BY JobRole, JobSatisfaction 
+ORDER BY JobRole, JobSatisfaction;
+
+-- 9. Attrition by Salary Slab (Matches the bottom-left Bar Chart)
+SELECT SalarySlab, COUNT(EmpID) AS Attrition_Count 
+FROM hr_data 
+WHERE Attrition = 'Yes' 
+GROUP BY SalarySlab 
+ORDER BY Attrition_Count DESC;
